@@ -1,6 +1,6 @@
  const express = require('express')
 const app = express()
-const port = 3000
+const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
 	var a = (req.headers['x-forwarded-for'] || '').split(',')[0] 
@@ -10,6 +10,6 @@ console.log(req.ip)
   res.send('your IP is: ' + req.connection.remoteAddress);
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
 })
