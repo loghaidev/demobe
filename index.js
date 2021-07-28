@@ -6,7 +6,7 @@ app.get('/', (req, res) => {
 	var a = (req.headers['x-forwarded-for'] || '').split(',')[0] 
         || req.connection.remoteAddress;
 
-console.log(req.ip)
+console.log(req.connection.remoteAddress)
   res.send('your IP is: ' + req.connection.remoteAddress);
 })
 
