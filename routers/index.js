@@ -1,8 +1,12 @@
 const express = require('express');
+const { getExpense, addExpense } = require('../controllers/expense');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send({ response: 'Server is up and running. -' }).status(200);
-});
+let endpoint = {
+  expense: '/api/expense',
+};
+
+router.get(endpoint.expense, getExpense);
+router.post(endpoint.expense, addExpense);
 
 module.exports = router;
