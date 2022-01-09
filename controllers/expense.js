@@ -1,5 +1,6 @@
 const { timezone } = require('../configs/timezone');
 const db = require('../configs/db');
+const { ObjectId } = require('mongodb');
 const expense = db.collection('expense');
 const getExpense = async (req, res) => {
   try {
@@ -30,7 +31,22 @@ const addExpense = async (req, res) => {
   }
 };
 
+const updateExpense = async (req, res) => {
+  try {
+    var result = await expense.updateOne(
+      { _id: ObjectId(req.params.id) },
+      { $set: req.body }
+    );
+    console.log(result);
+    res.json({ success: true, data: req.body });
+  } catch (err) {
+    console.log(err);
+    res.json({ message: err });
+  }
+};
+
 module.exports = {
   getExpense,
   addExpense,
+  updateExpense,
 };

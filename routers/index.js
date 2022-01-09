@@ -1,5 +1,9 @@
 const express = require('express');
-const { getExpense, addExpense } = require('../controllers/expense');
+const {
+  getExpense,
+  addExpense,
+  updateExpense,
+} = require('../controllers/expense');
 const router = express.Router();
 
 let endpoint = {
@@ -8,5 +12,6 @@ let endpoint = {
 
 router.get(endpoint.expense, getExpense);
 router.post(endpoint.expense, addExpense);
+router.put(`${endpoint.expense}/:id`, updateExpense);
 
 module.exports = router;
