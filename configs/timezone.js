@@ -1,7 +1,8 @@
 const moment = require('moment-timezone');
+const TIMEZONE = 'Europe/London';
 
 const timezone = (time) => {
-  return moment().tz('Europe/London');
+  return moment(time).tz(TIMEZONE);
 };
 
 module.exports = { timezone };

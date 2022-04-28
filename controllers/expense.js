@@ -1,16 +1,36 @@
 const { timezone } = require('../configs/timezone');
+const moment = require('moment-timezone');
 const db = require('../configs/db');
-const { ObjectId } = require('mongodb');
+const { ObjectId, ISODate } = require('mongodb');
 const expense = db.collection('expense');
 const getExpense = async (req, res) => {
   try {
-    const expenseList = await expense.find({}).toArray();
+    let filterDateCondition = {
+      $gte: timezone().startOf('month').format(),
+      $lte: timezone().endOf('month').format(),
+    };
+    if (req.query?.from) {
+      filterDateCondition['$gte'] = timezone(req.query.from)
+        .startOf('day')
+        .format();
+    }
+    if (req.query?.to) {
+      filterDateCondition['$lte'] = timezone(req.query.to)
+        .endOf('day')
+        .format();
+    }
+    const expenseList = await expense
+      .find({
+        created_date: filterDateCondition,
+      })
+      .toArray();
 
     let total = expenseList?.reduce((a, b) => a + b.value, 0);
     res
       .json({ data: expenseList, total_cost: total, success: true })
       .status(200);
   } catch (err) {
+    console.log(err);
     res.json({ data: [], message: err, success: false }).status(500);
   }
 };
