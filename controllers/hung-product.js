@@ -31,7 +31,14 @@ const getProducts = async (req, res) => {
 
     const totalQuery = await productsList.count();
 
-    const allProduct = await productsList.toArray();
+    const pageSize = req.query?.pageSize || 20;
+
+    const page = req.query?.page || 1;
+
+    const allProduct = await productsList
+      .limit(pageSize)
+      .skip((page - 1) * pageSize)
+      .toArray();
 
     console.log(allProduct);
     res
