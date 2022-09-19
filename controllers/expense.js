@@ -25,7 +25,10 @@ const getExpense = async (req, res) => {
       })
       .toArray();
 
-    let total = expenseList?.reduce((a, b) => a + b.value, 0);
+    let total = expenseList?.reduce(
+      (a, b) => a + (b.type == 'spend' ? b.value : 0),
+      0
+    );
     res
       .json({ data: expenseList, total_cost: total, success: true })
       .status(200);
@@ -65,8 +68,42 @@ const updateExpense = async (req, res) => {
   }
 };
 
+const getDataStatis = async (req, res) => {
+  try {
+    let filterDateCondition = {
+      $gte: timezone().startOf('day').format(),
+      $lte: timezone().endOf('day').format(),
+    };
+    if (req.query?.from) {
+      filterDateCondition['$gte'] = timezone(req.query.from)
+        .startOf('day')
+        .format();
+    }
+    if (req.query?.to) {
+      filterDateCondition['$lte'] = timezone(req.query.to)
+        .endOf('day')
+        .format();
+    }
+    const expenseList = await expense
+      .find({
+        created_date: filterDateCondition,
+      })
+      .toArray();
+
+    let statisData = {};
+
+    res
+      .json({ data: statisData, total_cost: total, success: true })
+      .status(200);
+  } catch (e) {
+    console.log(e);
+    res.json({ data: {}, message: err, success: false }).status(500);
+  }
+};
+
 module.exports = {
   getExpense,
   addExpense,
   updateExpense,
+  getDataStatis,
 };
