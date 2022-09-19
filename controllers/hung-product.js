@@ -31,22 +31,22 @@ const getProducts = async (req, res) => {
 
     const totalQuery = await productsList.count();
 
-    const pageSize = req.query?.pageSize || 20;
+    const pageSize =
+      (req.query.pageSize && parseInt(req.query?.pageSize)) || 20;
 
-    const page = req.query?.page || 1;
+    const page = (req.query.page && parseInt(req.query?.page)) || 1;
 
     const allProduct = await productsList
       .limit(pageSize)
       .skip((page - 1) * pageSize)
       .toArray();
 
-    console.log(allProduct);
     res
       .json({
         data: allProduct,
         success: true,
         total: totalQuery,
-        page: query.page,
+        page: page,
       })
       .status(200);
   } catch (err) {
