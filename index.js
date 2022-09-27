@@ -6,6 +6,7 @@ const router = require('./routers');
 
 const app = express();
 const server = http.createServer(app);
+require('dotenv').config();
 
 app.use(cors());
 app.use(express.json());

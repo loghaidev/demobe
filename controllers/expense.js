@@ -75,11 +75,13 @@ const getDataStatis = async (req, res) => {
       $lte: timezone().endOf('day').format(),
     };
     if (req.query?.from) {
+      // yyyy-mm-dd
       filterDateCondition['$gte'] = timezone(req.query.from)
         .startOf('day')
         .format();
     }
     if (req.query?.to) {
+      // yyyy-mm-dd
       filterDateCondition['$lte'] = timezone(req.query.to)
         .endOf('day')
         .format();
@@ -90,13 +92,9 @@ const getDataStatis = async (req, res) => {
       })
       .toArray();
 
-    let statisData = {};
-
-    res
-      .json({ data: statisData, total_cost: total, success: true })
-      .status(200);
-  } catch (e) {
-    console.log(e);
+    res.json({ data: expenseList, success: true }).status(200);
+  } catch (err) {
+    console.log(err);
     res.json({ data: {}, message: err, success: false }).status(500);
   }
 };

@@ -2,6 +2,7 @@ const { timezone } = require('../configs/timezone');
 const moment = require('moment-timezone');
 const db = require('../configs/db');
 const { ObjectId, ISODate } = require('mongodb');
+const { Products } = require('../models/products');
 const productsDB = db.collection('hung-products');
 const getProducts = async (req, res) => {
   try {
@@ -25,25 +26,29 @@ const getProducts = async (req, res) => {
       query['id'] = +req.query.product;
     }
 
-    const productsList = await productsDB.find({
-      ...query,
-    });
-
-    const totalQuery = await productsList.count();
-
     const pageSize =
       (req.query.pageSize && parseInt(req.query?.pageSize)) || 20;
 
     const page = (req.query.page && parseInt(req.query?.page)) || 1;
 
-    const allProduct = await productsList
-      .limit(pageSize)
-      .skip((page - 1) * pageSize)
-      .toArray();
+    const [allProducts, totalQuery] = await Promise.all([
+      productsDB
+        .find({
+          ...query,
+        })
+        .limit(pageSize)
+        .skip((page - 1) * pageSize)
+        .toArray(),
+      productsDB
+        .find({
+          ...query,
+        })
+        .count(),
+    ]);
 
     res
       .json({
-        data: allProduct,
+        data: allProducts,
         success: true,
         total: totalQuery,
         page: page,
@@ -58,23 +63,12 @@ const getProducts = async (req, res) => {
 const addProducts = async (req, res) => {
   try {
     let body = req.body?.map((e) => {
-      return {
-        id: e.id,
-        name: e.name,
-        price: +e.price,
-        sex: e.sex,
-        type: e.type,
-        description: e.description,
-        images: [e.image1, e.image2, e.image3],
-        count: e.count,
-        created_date: timezone().format(),
-      };
+      return new Products(e);
     });
 
     if (req.body) {
       await productsDB.insertMany(body);
     }
-    // console.log(req);
 
     res.json({ success: true, data: body }).status(200);
   } catch (err) {
