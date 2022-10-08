@@ -25,7 +25,7 @@ const getProducts = async (req, res) => {
       query['id'] = +req.query.product;
     }
 
-    if (req.query?.sex) {
+    if (req.query?.gender) {
       console.log({ sex: req.query.gender });
       query['id'] = +req.query.product;
     }
