@@ -22,7 +22,11 @@ const getProducts = async (req, res) => {
     //     .format();
     // }
     if (req.query?.product) {
-      console.log({ product: req.query.product });
+      query['id'] = +req.query.product;
+    }
+
+    if (req.query?.sex) {
+      console.log({ sex: req.query.gender });
       query['id'] = +req.query.product;
     }
 
