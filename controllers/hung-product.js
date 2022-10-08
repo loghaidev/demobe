@@ -26,7 +26,7 @@ const getProducts = async (req, res) => {
     }
 
     if (req.query?.gender) {
-      query['sex'] = +req.query.gender;
+      query['sex'] = req.query.gender;
     }
 
     const pageSize =
