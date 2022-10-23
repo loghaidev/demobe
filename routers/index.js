@@ -10,6 +10,7 @@ const {
   getProducts,
   updateProduct,
   addProducts,
+  createPayment,
 } = require('../controllers/hung-product');
 const { login, register } = require('../controllers/authentication');
 const router = express.Router();
@@ -34,5 +35,7 @@ router.put(`${endpoint.hungProducts}/:id`, updateProduct);
 
 router.post(`${endpoint.auth}/login`, login);
 router.post(`${endpoint.auth}/register`, register);
+
+router.post('/create_payment_url', createPayment);
 
 module.exports = router;
