@@ -1,31 +1,33 @@
 const express = require('express');
 const {
-  getExpense,
-  addExpense,
-  updateExpense,
-  getDataStatis,
+    getExpense,
+    addExpense,
+    updateExpense,
+    getDataStatistic,
+    deleteExpense
 } = require('../controllers/expense');
 const { count } = require('../controllers/countVisitor');
 const {
-  getProducts,
-  updateProduct,
-  addProducts,
-  createPayment,
+    getProducts,
+    updateProduct,
+    addProducts,
+    createPayment
 } = require('../controllers/hung-product');
 const { login, register } = require('../controllers/authentication');
 const router = express.Router();
 
 let endpoint = {
-  expense: '/api/expense',
-  countVisitor: '/api/count',
-  auth: '/api/auth',
-  hungProducts: '/api/hung/products',
+    expense: '/api/expense',
+    countVisitor: '/api/count',
+    auth: '/api/auth',
+    hungProducts: '/api/hung/products'
 };
 
 router.get(endpoint.expense, getExpense);
-router.get(`${endpoint.expense}/statis`, getDataStatis);
+router.get(`${endpoint.expense}/statistic`, getDataStatistic);
 router.post(endpoint.expense, addExpense);
 router.put(`${endpoint.expense}/:id`, updateExpense);
+router.delete(`${endpoint.expense}/:id`, deleteExpense);
 
 router.get(endpoint.countVisitor, count);
 
